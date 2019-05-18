@@ -1,44 +1,54 @@
-﻿using UnityEngine;
-
-public class Enemy : MonoBehaviour
+﻿public class Enemy
 {
-    private Cyclone.Particle particle = new Cyclone.Particle();
-    private Cyclone.Vector3 target;
+    private double Health{ get; set; }
+    private double Damage{ get; set; }
 
-    public Transform baseTransform;
 
-    public void Start()
+    private int Tier { get; set; }
+    private int Level { get; set; }
+
+    Enemy()
     {
-        target = new Cyclone.Vector3(baseTransform.position.x, baseTransform.position.y, baseTransform.position.z);
 
-        Initialize(target);
     }
 
-    public void Initialize(Cyclone.Vector3 target)
+    Enemy(double Health, double Damage, double StunPower, int Tier)
     {
-        Cyclone.Vector3 directionVector = target - particle.Position;
-        directionVector.Normalize();
-
-        particle.InverseMass = 2.0f;
-        particle.SetPosition(transform.position.x, transform.position.y, transform.position.z);
-        particle.SetVelocity(directionVector.x, directionVector.y, directionVector.z);
-        particle.SetAcceleration(0f, 0f, 0f);
+        this.Health = Health;
+        this.Damage= Damage;
+        this.Tier = Tier;
+        this.Level = 1;
     }
 
-
-    private void FixedUpdate()
+    public double GetHealth()
     {
-        particle.Integrate(Time.deltaTime);
-        SetObjectPosition(particle.Position);
+        return Health;
+    }
+    public double GetDamage()
+    {
+        return Damage;
+    }
+    public double GetTier()
+    {
+        return Tier;
+    }
+    public double GetLevel()
+    {
+        return Level;
     }
 
-    private void SetObjectPosition(Cyclone.Vector3 position)
+    public void Upgrade()
     {
-        transform.position = new Vector3((float)position.x, (float)position.y, (float)position.z);
+        Level = Level + 1;
     }
 
-    private void PrintVector3(Cyclone.Vector3 position)
+    public double GetUpgradeCost()
     {
-        Debug.LogError((float)position.x + ", " + (float)position.y +", " + (float)position.z);
+        return Tier * Tier * Level + 10;
+    }
+
+    public void TakeDamage(double Damage)
+    {
+        Health = Health - Damage;
     }
 }
