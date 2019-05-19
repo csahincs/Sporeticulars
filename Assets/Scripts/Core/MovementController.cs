@@ -3,8 +3,7 @@
 public class MovementController : MonoBehaviour
 {
     public Transform anchor;
-
-
+    
     private Cyclone.ParticleForceRegistry registry = new Cyclone.ParticleForceRegistry();
     private Cyclone.Particle particle = new Cyclone.Particle();
     public double damping = 0.995f;
