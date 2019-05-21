@@ -2,7 +2,7 @@
 
 public class MovementController : MonoBehaviour
 {
-    public Transform anchor;
+    private Transform anchor;
     
     private Cyclone.ParticleForceRegistry registry = new Cyclone.ParticleForceRegistry();
     private Cyclone.Particle particle = new Cyclone.Particle();
@@ -10,6 +10,7 @@ public class MovementController : MonoBehaviour
 
     private void Start()
     {
+        anchor = Camera.main.transform;
         particle.InverseMass = 2.0f;
         particle.SetPosition(transform.position.x, transform.position.y, transform.position.z);
         particle.SetVelocity(0f, 0f, 0f);

@@ -12,7 +12,7 @@ public class Demon : MonoBehaviour
     void Start()
     {
         Enemy demon = new Enemy(100f, 5f);
-        target = GameManager.instance.BaseTransform;
+        target = GameManager.instance.town.transform;
 
         particle.InverseMass = 2.0f;
         particle.SetPosition(transform.position.x, transform.position.y, transform.position.z);
