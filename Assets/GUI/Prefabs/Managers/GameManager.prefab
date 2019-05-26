@@ -43,14 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 390ed08e5187d204889c9f0d2b797b3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawner: {fileID: 4311117005534354602, guid: 62f35f3a79428a648a9d4a9768a1acab, type: 3}
+  spawner: {fileID: 0}
   physics: {fileID: 0}
-  town: {fileID: 172104018869024168, guid: 1f3fd8f1e3f3722439a57c419591d146, type: 3}
-  player: {fileID: 996084983785786200, guid: 374fb7be3cb18294e81f0d846f3264ca, type: 3}
-  groundGrid: {fileID: 4098513197484226310, guid: 4271bf0cc58857e41b843a91ba68cee9,
-    type: 3}
-  trapGrid: {fileID: 5458247456385508536, guid: 274e86f33cf48a74283c3e8ce60736a9,
-    type: 3}
+  town: {fileID: 0}
+  player: {fileID: 0}
+  groundGrid: {fileID: 0}
+  trapGrid: {fileID: 0}
   SpawnCoefficient: 1000
-  mainMenu: {fileID: 1640532563578366097, guid: c1daa213e7648d64998dfc69f267a718,
-    type: 3}
+  mainMenu: {fileID: 0}
+  inventory: {fileID: 0}

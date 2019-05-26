@@ -2,16 +2,22 @@
 
 public class MovementController : MonoBehaviour
 {
-    private Transform anchor;
+    public Transform anchor;
     
     private Cyclone.ParticleForceRegistry registry = new Cyclone.ParticleForceRegistry();
-    private Cyclone.Particle particle = new Cyclone.Particle();
+    public Cyclone.Particle particle = new Cyclone.Particle();
+
     public double damping = 0.995f;
 
+    public Player player;
+    public Cyclone.BoundingSphere body;
+    
     private void Start()
     {
-        anchor = Camera.main.transform;
-        particle.InverseMass = 2.0f;
+        player = new Player();
+        player.SetSelectedWeapon(GameManager.instance.weapons[0]);
+        
+        particle.InverseMass = 0.1f;
         particle.SetPosition(transform.position.x, transform.position.y, transform.position.z);
         particle.SetVelocity(0f, 0f, 0f);
         particle.SetAcceleration(0f, 0f, 0f);
@@ -21,12 +27,15 @@ public class MovementController : MonoBehaviour
         Cyclone.ParticleAnchoredSpring anchoredSpring = new Cyclone.ParticleAnchoredSpring(anchorPosition, 1.0f, 10.0f);
 
         SetObjectPosition(particle.Position);
+
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.65f);
     }
 
     private void FixedUpdate()
     {
         registry.UpdateForces(Time.deltaTime);
         particle.Integrate(Time.deltaTime);
+        body.SetCenter(particle.GetPosition());
         SetObjectPosition(particle.Position);
     }
 
@@ -35,6 +44,11 @@ public class MovementController : MonoBehaviour
         transform.position = new Vector3((float)position.x, (float)position.y, (float)position.z);
         anchor.transform.position = new Vector3((float)position.x, (float)position.y, -10f);
     }
+
+    public void PrintPosition()
+    {
+        Debug.Log("x : " + particle.Position.x + "y : " + particle.Position.y + "z : " + particle.Position.z);
+    }
     
     void OnGUI()
     {
@@ -42,10 +56,12 @@ public class MovementController : MonoBehaviour
 
         switch (key)
         {
-            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 1f, 0f)); break;
-            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -1f, 0f)); break;
-            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-1f, 0f, 0f)); break;
-            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(1f, 0f, 0f)); break;
+            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 50f, 0f)); break;
+            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -50f, 0f)); break;
+            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-50f, 0f, 0f)); break;
+            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(50f, 0f, 0f)); break;
+
+            case KeyCode.Space: Debug.Log(player.GetSelectedWeapon()); break;
         }
     }
 

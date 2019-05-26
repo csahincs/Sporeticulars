@@ -3,13 +3,14 @@
     private double Damage { get; set; }
     private double StunPower { get; set; }
     
-    private double Tier { get; set; }
-    private double Level { get; set; }
-    Weapon()
-    {
+    private int Tier { get; set; }
+    private int Level { get; set; }
 
+    public Weapon()
+    {
+        Level = 1;
     }
-    Weapon(double Health, double Damage, double StunPower, int Tier)
+    public Weapon(double Damage, double StunPower, int Tier)
     {
         this.Damage = Damage;
         this.StunPower = StunPower;
@@ -26,7 +27,6 @@
     {
         return StunPower;
     }
-
     public double GetTier()
     {
         return Tier;
@@ -34,6 +34,18 @@
     public double GetLevel()
     {
         return Level;
+    }
+    public void SetDamage(double Damage)
+    {
+        this.Damage = Damage;
+    }
+    public void SetStunPower(double StunPower)
+    {
+        this.StunPower = StunPower;
+    }
+    public void SetTier(int Tier)
+    {
+        this.Tier = Tier;
     }
 
     public void Upgrade()
