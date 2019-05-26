@@ -50,5 +50,9 @@ MonoBehaviour:
   groundGrid: {fileID: 0}
   trapGrid: {fileID: 0}
   SpawnCoefficient: 1000
+  killCount: 0
+  aliveCount: 0
   mainMenu: {fileID: 0}
+  levelEnd: {fileID: 0}
+  levelStart: {fileID: 0}
   inventory: {fileID: 0}

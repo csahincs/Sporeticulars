@@ -25,7 +25,7 @@ public class LevelEnd : MonoBehaviour
 
     void StartBtnClicked()
     {
-        GameManager.instance.SetUpMap();
+        GameManager.instance.SetUpLevelStart();
         gameObject.SetActive(false);
     }
 

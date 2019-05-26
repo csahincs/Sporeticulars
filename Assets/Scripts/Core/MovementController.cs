@@ -56,10 +56,10 @@ public class MovementController : MonoBehaviour
 
         switch (key)
         {
-            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 50f, 0f)); break;
-            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -50f, 0f)); break;
-            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-50f, 0f, 0f)); break;
-            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(50f, 0f, 0f)); break;
+            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 20f, 0f)); break;
+            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -20f, 0f)); break;
+            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-20f, 0f, 0f)); break;
+            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(20f, 0f, 0f)); break;
 
             case KeyCode.Space: Debug.Log(player.GetSelectedWeapon()); break;
         }

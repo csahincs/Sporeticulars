@@ -17,7 +17,7 @@ public class Demon : MonoBehaviour
 
     void Start()
     {
-        demon = new Enemy(100f, 5f);
+        demon = new Enemy(100f, 10f);
         
         target = GameManager.instance.town.transform;
 

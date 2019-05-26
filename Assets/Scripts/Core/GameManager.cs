@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     #region GUI Elements
     public MainMenu mainMenu;
     public LevelEnd levelEnd;
+    public LevelStart levelStart;
+    public GameEnd gameEnd;
     public GameObject inventory;
     #endregion
 
@@ -60,8 +62,25 @@ public class GameManager : MonoBehaviour
     
     public void LevelPassed(int killCount)
     {
-        SetLevel(Level + 1);
-        SetInfluence(Influence - (killCount / 10));
+        Level += 1;
+        Influence -= (killCount);
+
+        SetLevel(Level);
+        SetInfluence(Influence);
+    }
+
+    public void SetUpLevelStart()
+    {
+        Debug.Log(Level);
+        if(Level >= 5)
+        {
+            if (Influence < 50)
+                gameEnd.Initialize(LevelEndStatus.Fail);
+            else
+                gameEnd.Initialize(LevelEndStatus.Success);
+            return;
+        }
+        levelStart.Initialize(Level, (int)(SpawnCoefficient / Influence) * Level, Influence);
     }
 
     public void SetUpMap()
@@ -78,7 +97,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < spawner.transform.childCount; i++)
             Destroy(spawner.transform.GetChild(i));
 
-        spawner.SetNumberOfSpawn((int)(SpawnCoefficient / Influence) * Level + 10);
+        spawner.SetNumberOfSpawn((int)(SpawnCoefficient / Influence) * Level);
         killCount = 0;
         StartCoroutine(RoundTime());
     }
@@ -115,6 +134,23 @@ public class GameManager : MonoBehaviour
     public void SetInfluence(float influence)
     {
         PlayerPrefs.SetFloat("Influence", influence);
+    }
+
+    public void ResetGame()
+    {
+        spawner.gameObject.SetActive(false);
+        physics.gameObject.SetActive(false);
+        player.gameObject.SetActive(false);
+        town.gameObject.SetActive(false);
+        groundGrid.gameObject.SetActive(false);
+        trapGrid.gameObject.SetActive(false);
+        inventory.gameObject.SetActive(false);
+
+        Level = 1;
+        Influence = 100;
+        SetLevel(1);
+        SetInfluence(100f);
+        mainMenu.gameObject.SetActive(true);
     }
 
 
