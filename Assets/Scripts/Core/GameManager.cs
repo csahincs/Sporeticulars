@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     public void LevelPassed(int killCount)
     {
         Level += 1;
-        Influence -= (killCount);
+        Influence -= (killCount * Level);
 
         SetLevel(Level);
         SetInfluence(Influence);

@@ -24,7 +24,22 @@ public class PhysicsManager : MonoBehaviour
             Demon demon = sphere.GetComponent<Demon>();
             if (player.body.Overlaps(demon.body))
             {
-                if(demon.demon.GetHealth() <= player.player.GetSelectedWeapon().GetDamage())
+                Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
+
+                particleContact.particle[0] = demon.particle;
+                particleContact.particle[1] = player.particle;
+
+                particleContact.ParticleMovement[0] = demon.particle.GetVelocity();
+                particleContact.ParticleMovement[0] = player.particle.GetVelocity();
+
+                particleContact.ContactNormal = demon.body.Center - player.body.Center;
+                particleContact.Penetration = (demon.body.Center - player.body.Center).Magnitude - player.body.Radius - demon.body.Radius;
+
+                Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
+                contacts[0] = particleContact;
+                contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
+
+                if (demon.demon.GetHealth() <= player.player.GetSelectedWeapon().GetDamage())
                 {
                     boundingSpheres.Remove(sphere);
                     if (!demon.waitingDamageDuration)
@@ -44,21 +59,6 @@ public class PhysicsManager : MonoBehaviour
                     }
                     demon.demon.TakeStun(player.player.GetSelectedWeapon().GetStunPower());
                 }
-
-                Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
-
-                particleContact.particle[0] = demon.particle;
-                particleContact.particle[1] = player.particle;
-
-                particleContact.ParticleMovement[0] = demon.particle.GetVelocity();
-                particleContact.ParticleMovement[0] = player.particle.GetVelocity();
-
-                particleContact.ContactNormal = demon.body.Center - player.body.Center;
-                particleContact.Penetration = (demon.body.Center - player.body.Center).Magnitude - player.body.Radius - demon.body.Radius;
-
-                Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
-                contacts[0] = particleContact;
-                contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
             }
 
             if(town.body.Overlaps(demon.body))
