@@ -39,8 +39,8 @@ public class PhysicsManager : MonoBehaviour
                 Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
                 contacts[0] = particleContact;
                 contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
-                
 
+                bool isKilled = false;
                 if (!demon.demon.GetOnCollision())
                 {
                     if(demon.demon.GetHealth() <= player.player.GetSelectedWeapon().GetDamage())
@@ -50,7 +50,9 @@ public class PhysicsManager : MonoBehaviour
                         combatTxt.transform.SetParent(GameManager.instance.canvasTransform);
                         combatTxt.GetComponent<RectTransform>().localScale = Vector3.one / 2;
                         combatTxt.GetComponent<CombatText>().Initialize(player.particle.GetPosition(), "KILLED");
+                        isKilled = true;
                     }
+                    
                     demon.demon.TakeDamage(player.player.GetSelectedWeapon().GetDamage());
                     
                 }
@@ -62,6 +64,13 @@ public class PhysicsManager : MonoBehaviour
                     combatTxt.transform.SetParent(GameManager.instance.canvasTransform);
                     combatTxt.GetComponent<RectTransform>().localScale = Vector3.one / 2;
                     combatTxt.GetComponent<CombatText>().Initialize(player.particle.GetPosition(), "STUNNED");
+                }
+                else if (!demon.demon.GetOnCollision() && !isKilled)
+                {
+                    GameObject combatTxt = Instantiate(GameManager.instance.combatTxt);
+                    combatTxt.transform.SetParent(GameManager.instance.canvasTransform);
+                    combatTxt.GetComponent<RectTransform>().localScale = Vector3.one / 2;
+                    combatTxt.GetComponent<CombatText>().Initialize(player.particle.GetPosition(), "DAMAGED");
                 }
                 demon.demon.SetOnCollision(true);
             }
@@ -100,29 +109,6 @@ public class PhysicsManager : MonoBehaviour
                 contacts[0] = particleContact;
                 contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
             }
-            /*for (int j = 0; j < boundingSpheres.Count; j++)
-            {
-                GameObject bSphere = boundingSpheres[j];
-                Demon demon = bSphere.GetComponent<Demon>();
-
-                if (wall.body.Overlaps(demon.body))
-                {
-                    Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
-
-                    particleContact.particle[0] = demon.particle;
-                    particleContact.particle[1] = wall.particle;
-
-                    particleContact.ParticleMovement[0] = demon.particle.GetVelocity();
-                    particleContact.ParticleMovement[0] = wall.particle.GetVelocity();
-
-                    particleContact.ContactNormal = demon.body.Center - wall.body.Center;
-                    particleContact.Penetration = (demon.body.Center - wall.body.Center).Magnitude - wall.body.Radius - demon.body.Radius;
-
-                    Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
-                    contacts[0] = particleContact;
-                    contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
-                }
-            }*/
 
         }
     }

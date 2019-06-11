@@ -181,6 +181,16 @@ namespace Cyclone
                 z *= 1 / length;
             }
         }
+
+        public bool IsEqualWithEpsilon(Vector3 v2)
+        {
+            if (Mathf.Abs((float)(x - v2.x)) > 2f)
+                return false;
+            if (Mathf.Abs((float)(y - v2.y)) > 2f)
+                return false;
+
+            return true;
+        }
         public Vector3 Unit()
         {
             Vector3 unit = new Vector3(this);

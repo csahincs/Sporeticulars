@@ -28,7 +28,7 @@ public class Demon : MonoBehaviour
         particle.Damping = damping;
 
         SetObjectPosition(particle.Position);
-        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.3f);
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.25f);
         GameManager.instance.physics.boundingSpheres.Add(gameObject);
         
     }
@@ -51,13 +51,29 @@ public class Demon : MonoBehaviour
 
         Cyclone.Vector3 direction = new Cyclone.Vector3(target.position.x - transform.position.x, target.position.y - transform.position.y, target.position.z - transform.position.z);
         direction.Normalize();
-        if(particle.GetVelocity() != direction)
+
+
+        Cyclone.Vector3 normalizedVelocity = particle.GetVelocity();
+        normalizedVelocity.Normalize();
+
+
+        if (demon.GetStatus() != Enemy.StatusEnum.Stunned)
         {
-            if (demon.GetStatus() != Enemy.StatusEnum.Stunned)
+            if (normalizedVelocity.Magnitude == 0)
+            {
+                particle.AddForce(direction);
+            }
+            else if (!normalizedVelocity.IsEqualWithEpsilon(direction))
+            {
+                Cyclone.Vector3 reversedVelocity = new Cyclone.Vector3(-1 * particle.GetVelocity().x, -1 * particle.GetVelocity().y, -1 * particle.GetVelocity().z);
+                particle.AddForce(reversedVelocity);
+            }
+            else if(particle.GetVelocity().Magnitude < 2f)
             {
                 particle.AddForce(direction);
             }
         }
+        
 
         particle.Integrate(Time.deltaTime);
         body.SetCenter(particle.GetPosition());

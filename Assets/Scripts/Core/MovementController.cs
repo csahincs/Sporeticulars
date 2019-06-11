@@ -29,7 +29,7 @@ public class MovementController : MonoBehaviour
 
         SetObjectPosition(particle.Position);
 
-        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.3f);
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.25f);
     }
 
     private void FixedUpdate()
@@ -57,10 +57,10 @@ public class MovementController : MonoBehaviour
 
         switch (key)
         {
-            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 20f, 0f)); break;
-            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -20f, 0f)); break;
-            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-20f, 0f, 0f)); break;
-            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(20f, 0f, 0f)); break;
+            case KeyCode.W: particle.AddForce(new Cyclone.Vector3(0f, 2.5f, 0f)); break;
+            case KeyCode.S: particle.AddForce(new Cyclone.Vector3(0f, -2.5f, 0f)); break;
+            case KeyCode.A: particle.AddForce(new Cyclone.Vector3(-2.5f, 0f, 0f)); break;
+            case KeyCode.D: particle.AddForce(new Cyclone.Vector3(2.5f, 0f, 0f)); break;
 
             case KeyCode.Space: Debug.Log(player.GetSelectedWeapon()); break;
         }

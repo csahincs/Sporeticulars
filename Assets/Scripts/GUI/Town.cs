@@ -21,7 +21,7 @@ public class Town : MonoBehaviour
         
         SetObjectPosition(particle.Position);
 
-        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.25f);
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.15f);
     }
 
     // Update is called once per frame
