@@ -30,8 +30,8 @@ public class SpawnManager : MonoBehaviour
             System.Random random = new System.Random();
             int randomNumber = random.Next(0, enemies.Length);
 
-            int randomX = random.Next(-15, 5);
-            int randomY = random.Next(-15, 5);
+            int randomX = random.Next(-5, 5);
+            int randomY = random.Next(-5, 5);
 
 
             Instantiate(enemies[randomNumber], new Vector3(5 + randomX, 5 + randomY, 0), Quaternion.identity, transform);

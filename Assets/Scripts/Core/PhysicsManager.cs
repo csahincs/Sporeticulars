@@ -5,6 +5,7 @@ using UnityEngine;
 public class PhysicsManager : MonoBehaviour
 {
     public List<GameObject> boundingSpheres;
+    public List<GameObject> wallBoundingSpheres;
     public MovementController player;
     public Town town;
 
@@ -38,27 +39,35 @@ public class PhysicsManager : MonoBehaviour
                 Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
                 contacts[0] = particleContact;
                 contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
+                
 
-                if (demon.demon.GetHealth() <= player.player.GetSelectedWeapon().GetDamage())
+                if (!demon.demon.GetOnCollision())
                 {
-                    boundingSpheres.Remove(sphere);
-                    if (!demon.waitingDamageDuration)
+                    if(demon.demon.GetHealth() <= player.player.GetSelectedWeapon().GetDamage())
                     {
-                        demon.demon.TakeDamage(player.player.GetSelectedWeapon().GetDamage());
-                        StartCoroutine(demon.WaitForDamage());
+                        boundingSpheres.Remove(sphere);
+                        GameObject combatTxt = Instantiate(GameManager.instance.combatTxt);
+                        combatTxt.transform.SetParent(GameManager.instance.canvasTransform);
+                        combatTxt.GetComponent<RectTransform>().localScale = Vector3.one / 2;
+                        combatTxt.GetComponent<CombatText>().Initialize(player.particle.GetPosition(), "KILLED");
                     }
-                    demon.demon.TakeStun(player.player.GetSelectedWeapon().GetStunPower());
-                    continue;
+                    demon.demon.TakeDamage(player.player.GetSelectedWeapon().GetDamage());
+                    
                 }
-                else
+                
+                demon.demon.TakeStun(player.player.GetSelectedWeapon().GetStunPower());
+                if(!demon.demon.GetOnCollision() && demon.demon.GetStatus() == Enemy.StatusEnum.Stunned)
                 {
-                    if (!demon.waitingDamageDuration)
-                    {
-                        demon.demon.TakeDamage(player.player.GetSelectedWeapon().GetDamage());
-                        StartCoroutine(demon.WaitForDamage());
-                    }
-                    demon.demon.TakeStun(player.player.GetSelectedWeapon().GetStunPower());
+                    GameObject combatTxt = Instantiate(GameManager.instance.combatTxt);
+                    combatTxt.transform.SetParent(GameManager.instance.canvasTransform);
+                    combatTxt.GetComponent<RectTransform>().localScale = Vector3.one / 2;
+                    combatTxt.GetComponent<CombatText>().Initialize(player.particle.GetPosition(), "STUNNED");
                 }
+                demon.demon.SetOnCollision(true);
+            }
+            else
+            {
+                demon.demon.SetOnCollision(false);
             }
 
             if(town.body.Overlaps(demon.body))
@@ -67,6 +76,54 @@ public class PhysicsManager : MonoBehaviour
                 demon.demon.TakeDamage(100f);
                 town.TakeDamage(demon.demon.GetDamage());
             }
+        }
+
+
+        for (int i = 0; i < wallBoundingSpheres.Count; i++)
+        {
+            GameObject sphere = wallBoundingSpheres[i];
+            Wall wall = sphere.GetComponent<Wall>();
+            if (player.body.Overlaps(wall.body))
+            {
+                Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
+
+                particleContact.particle[0] = wall.particle;
+                particleContact.particle[1] = player.particle;
+
+                particleContact.ParticleMovement[0] = wall.particle.GetVelocity();
+                particleContact.ParticleMovement[0] = player.particle.GetVelocity();
+
+                particleContact.ContactNormal = wall.body.Center - player.body.Center;
+                particleContact.Penetration = (wall.body.Center - player.body.Center).Magnitude - player.body.Radius - wall.body.Radius;
+
+                Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
+                contacts[0] = particleContact;
+                contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
+            }
+            /*for (int j = 0; j < boundingSpheres.Count; j++)
+            {
+                GameObject bSphere = boundingSpheres[j];
+                Demon demon = bSphere.GetComponent<Demon>();
+
+                if (wall.body.Overlaps(demon.body))
+                {
+                    Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
+
+                    particleContact.particle[0] = demon.particle;
+                    particleContact.particle[1] = wall.particle;
+
+                    particleContact.ParticleMovement[0] = demon.particle.GetVelocity();
+                    particleContact.ParticleMovement[0] = wall.particle.GetVelocity();
+
+                    particleContact.ContactNormal = demon.body.Center - wall.body.Center;
+                    particleContact.Penetration = (demon.body.Center - wall.body.Center).Magnitude - wall.body.Radius - demon.body.Radius;
+
+                    Cyclone.ParticleContact[] contacts = new Cyclone.ParticleContact[1];
+                    contacts[0] = particleContact;
+                    contactResolver.ResolveContacts(contacts, 1, Time.fixedDeltaTime);
+                }
+            }*/
+
         }
     }
 }

@@ -19,8 +19,8 @@ public class MainMenu : MonoBehaviour
 
     void StartBtnClicked()
     {
-        GameManager.instance.SetUpLevelStart();
-        gameObject.SetActive(false);
+        GameManager.instance.tutorial.Open();
+        Close();
     }
 
     void ExitBtnClicked()

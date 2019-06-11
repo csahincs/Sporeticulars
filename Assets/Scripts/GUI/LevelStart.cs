@@ -27,12 +27,13 @@ public class LevelStart : MonoBehaviour
     void StartBtnClicked()
     {
         GameManager.instance.SetUpMap();
-        gameObject.SetActive(false);
+        Close();
     }
 
     void ExitBtnClicked()
     {
-        Application.Quit();
+        GameManager.instance.tutorial.Open();
+        Close();
     }
 
     public void Close()

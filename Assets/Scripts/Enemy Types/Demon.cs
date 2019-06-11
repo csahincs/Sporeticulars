@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Demon : MonoBehaviour
 {
@@ -10,10 +11,9 @@ public class Demon : MonoBehaviour
     public double damping = 0.995f;
     
     private Transform target;
-    //public Cyclone.ParticleContact particleContact = new Cyclone.ParticleContact();
+
     private IEnumerator coroutine;
     private bool waitingStunDuration = false;
-    public bool waitingDamageDuration = false;
 
     void Start()
     {
@@ -28,7 +28,7 @@ public class Demon : MonoBehaviour
         particle.Damping = damping;
 
         SetObjectPosition(particle.Position);
-        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.65f);
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.3f);
         GameManager.instance.physics.boundingSpheres.Add(gameObject);
         
     }
@@ -48,19 +48,17 @@ public class Demon : MonoBehaviour
             coroutine = WaitForStun(2f);
             StartCoroutine(coroutine);
         }
-        if (demon.GetStatus() == Enemy.StatusEnum.Stunned && waitingStunDuration)
-        {
-            return;
-        }
-        
 
         Cyclone.Vector3 direction = new Cyclone.Vector3(target.position.x - transform.position.x, target.position.y - transform.position.y, target.position.z - transform.position.z);
         direction.Normalize();
         if(particle.GetVelocity() != direction)
         {
-            particle.AddForce(direction);
+            if (demon.GetStatus() != Enemy.StatusEnum.Stunned)
+            {
+                particle.AddForce(direction);
+            }
         }
-        
+
         particle.Integrate(Time.deltaTime);
         body.SetCenter(particle.GetPosition());
         SetObjectPosition(particle.Position);
@@ -80,13 +78,4 @@ public class Demon : MonoBehaviour
         demon.ResetStunMeter();
         demon.SetStatus(Enemy.StatusEnum.Normal);
     }
-
-    public IEnumerator WaitForDamage()
-    {
-        waitingDamageDuration = true;
-        yield return new WaitForSeconds(2f);
-        waitingDamageDuration = false;
-    }
-    
-
 }

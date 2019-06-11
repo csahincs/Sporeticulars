@@ -8,7 +8,7 @@ public class Enemy
     private double Damage;
     private double StunMeter;
     private StatusEnum Status;
-
+    private bool OnCollision;
 
     public Enemy()
     {
@@ -22,6 +22,7 @@ public class Enemy
         this.Damage= Damage;
         StunMeter = 0f;
         Status = StatusEnum.Normal;
+        OnCollision = false;
     }
 
     public double GetHealth()
@@ -47,6 +48,16 @@ public class Enemy
     public void TakeDamage(double Damage)
     {
         Health = Health - Damage;
+    }
+
+    public void SetOnCollision(bool Col)
+    {
+        OnCollision = Col;
+    }
+
+    public bool GetOnCollision()
+    {
+        return OnCollision;
     }
 
     public void TakeStun(double Stun)

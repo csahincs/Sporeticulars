@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class MovementController : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class MovementController : MonoBehaviour
 
         SetObjectPosition(particle.Position);
 
-        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.65f);
+        body = new Cyclone.BoundingSphere(particle.GetPosition(), 0.3f);
     }
 
     private void FixedUpdate()
@@ -64,5 +65,7 @@ public class MovementController : MonoBehaviour
             case KeyCode.Space: Debug.Log(player.GetSelectedWeapon()); break;
         }
     }
+
+
 
 }

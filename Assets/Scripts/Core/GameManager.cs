@@ -33,11 +33,19 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region GUI Elements
+    public GameEnd gameEnd;
     public MainMenu mainMenu;
+    public Tutorial tutorial;
     public LevelEnd levelEnd;
     public LevelStart levelStart;
-    public GameEnd gameEnd;
     public GameObject inventory;
+    public GameObject timerParent;
+    public Transform canvasTransform;
+    public TMPro.TextMeshProUGUI timer;
+    #endregion
+
+    #region Prefabs
+    public GameObject combatTxt;
     #endregion
 
     public enum LevelEndStatus { Success, Fail };
@@ -58,8 +66,47 @@ public class GameManager : MonoBehaviour
 
         weapons.Add(sword);
         weapons.Add(dullBlade);
+        
+        CloseGUIElements();
+        CloseGameElements();
+        mainMenu.Open();
     }
-    
+
+    public void CloseGUIElements()
+    {
+        mainMenu.Close();
+        levelEnd.Close();
+        levelStart.Close();
+        gameEnd.Close();
+        tutorial.Close();
+        inventory.gameObject.SetActive(false);
+        timerParent.gameObject.SetActive(false);
+        timer.gameObject.SetActive(false);
+    }
+
+    public void CloseGameElements()
+    {
+        spawner.gameObject.SetActive(false);
+        physics.gameObject.SetActive(false);
+        player.gameObject.SetActive(false);
+        town.gameObject.SetActive(false);
+        groundGrid.gameObject.SetActive(false);
+        trapGrid.gameObject.SetActive(false);
+    }
+
+    public void OpenGameElements()
+    {
+        spawner.gameObject.SetActive(true);
+        physics.gameObject.SetActive(true);
+        player.gameObject.SetActive(true);
+        town.gameObject.SetActive(true);
+        groundGrid.gameObject.SetActive(true);
+        trapGrid.gameObject.SetActive(true);
+        inventory.gameObject.SetActive(true);
+        timerParent.gameObject.SetActive(true);
+        timer.gameObject.SetActive(true);
+    }
+
     public void LevelPassed(int killCount)
     {
         Level += 1;
@@ -71,7 +118,6 @@ public class GameManager : MonoBehaviour
 
     public void SetUpLevelStart()
     {
-        Debug.Log(Level);
         if(Level >= 5)
         {
             if (Influence < 50)
@@ -85,14 +131,7 @@ public class GameManager : MonoBehaviour
 
     public void SetUpMap()
     {
-        spawner.gameObject.SetActive(true);
-        physics.gameObject.SetActive(true);
-        player.gameObject.SetActive(true);
-        town.gameObject.SetActive(true);
-        groundGrid.gameObject.SetActive(true);
-        trapGrid.gameObject.SetActive(true);
-        inventory.gameObject.SetActive(true);
-
+        OpenGameElements();
 
         for (int i = 0; i < spawner.transform.childCount; i++)
             Destroy(spawner.transform.GetChild(i));
@@ -104,19 +143,46 @@ public class GameManager : MonoBehaviour
 
     public void EndLevel(LevelEndStatus status)
     {
-        spawner.gameObject.SetActive(false);
-        physics.gameObject.SetActive(false);
-        player.gameObject.SetActive(false);
-        town.gameObject.SetActive(false);
-        groundGrid.gameObject.SetActive(false);
-        trapGrid.gameObject.SetActive(false);
-        inventory.gameObject.SetActive(false);
+        CloseGameElements();
+        CloseGUIElements();
         levelEnd.Initialize(status);
 
         LevelPassed(killCount);
         SetLevel(Level);
         SetInfluence(Influence);
         killCount = 0;
+    }
+    public void ResetGame()
+    {
+        CloseGameElements();
+        CloseGUIElements();
+
+        Level = 1;
+        Influence = 100;
+        SetLevel(1);
+        SetInfluence(100f);
+        mainMenu.Open();
+    }
+    
+    void OnGUI()
+    {
+        KeyCode key = Event.current.keyCode;
+        
+        switch (key)
+        {
+            case KeyCode.Alpha1: player.GetComponent<MovementController>().player.SetSelectedWeapon(weapons[0]);  break;
+            case KeyCode.Alpha2: player.GetComponent<MovementController>().player.SetSelectedWeapon(weapons[1]); break;
+        }
+    }
+
+    private IEnumerator RoundTime()
+    {
+        for(int i = 0; i < 60; i++)
+        {
+            timer.text = (60 - i).ToString();
+            yield return new WaitForSeconds(1f);
+        }
+        EndLevel(LevelEndStatus.Success);
     }
 
     public int GetLevel()
@@ -134,40 +200,5 @@ public class GameManager : MonoBehaviour
     public void SetInfluence(float influence)
     {
         PlayerPrefs.SetFloat("Influence", influence);
-    }
-
-    public void ResetGame()
-    {
-        spawner.gameObject.SetActive(false);
-        physics.gameObject.SetActive(false);
-        player.gameObject.SetActive(false);
-        town.gameObject.SetActive(false);
-        groundGrid.gameObject.SetActive(false);
-        trapGrid.gameObject.SetActive(false);
-        inventory.gameObject.SetActive(false);
-
-        Level = 1;
-        Influence = 100;
-        SetLevel(1);
-        SetInfluence(100f);
-        mainMenu.gameObject.SetActive(true);
-    }
-
-
-    void OnGUI()
-    {
-        KeyCode key = Event.current.keyCode;
-        
-        switch (key)
-        {
-            case KeyCode.Alpha1: player.GetComponent<MovementController>().player.SetSelectedWeapon(weapons[0]);  break;
-            case KeyCode.Alpha2: player.GetComponent<MovementController>().player.SetSelectedWeapon(weapons[1]); break;
-        }
-    }
-
-    private IEnumerator RoundTime()
-    {
-        yield return new WaitForSeconds(60f);
-        EndLevel(LevelEndStatus.Success);
     }
 }
