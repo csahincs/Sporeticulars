@@ -45,7 +45,7 @@ public class Demon : MonoBehaviour
 
         if (demon.GetStatus() == Enemy.StatusEnum.Stunned && !waitingStunDuration)
         {
-            coroutine = WaitForStun(2f);
+            coroutine = WaitForStun(3.5f);
             StartCoroutine(coroutine);
         }
 
